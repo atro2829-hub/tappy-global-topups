@@ -29,9 +29,9 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 COPY . /var/www/html
 WORKDIR /var/www/html
 
-# Install PHP dependencies (no dev)
-RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction \
-    && composer dump-autoload
+# Install PHP dependencies
+ENV COMPOSER_MEMORY_LIMIT=-1
+RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Install and build frontend
 RUN npm install && npm run build
