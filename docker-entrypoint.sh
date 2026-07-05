@@ -17,6 +17,18 @@ fi
 # Temporary debug - remove after fixing
 export APP_DEBUG=true
 
+# Fix APP_KEY format: Render generateValue creates base64 without prefix
+if [ -n "$APP_KEY" ] && [[ "$APP_KEY" != base64:* ]]; then
+    # If key contains non-hex chars (=, /, +), it's base64 without prefix
+    if [[ "$APP_KEY" == *"="* ]] || [[ "$APP_KEY" == *"/"* ]] || [[ "$APP_KEY" == *"+"* ]]; then
+        export APP_KEY="base64:${APP_KEY}"
+        echo "Fixed APP_KEY format (added base64: prefix)"
+    elif [ ${#APP_KEY} -ne 32 ]; then
+        # Wrong length hex key, regenerate
+        unset APP_KEY
+    fi
+fi
+
 if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force
 fi
