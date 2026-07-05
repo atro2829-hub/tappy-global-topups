@@ -1,20 +1,23 @@
 FROM php:8.3-apache
 
-# Enable Debian repo for PHP packages and install pre-built extensions
+# Install system libraries
 RUN apt-get update && apt-get install -y \
-    php8.3-gd \
-    php8.3-zip \
-    php8.3-mysql \
-    php8.3-pgsql \
-    php8.3-bcmath \
-    php8.3-intl \
-    php8.3-mbstring \
-    php8.3-curl \
-    php8.3-xml \
-    php8.3-readline \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libpq-dev \
+    libicu-dev \
     unzip \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install GD extension (with configure)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd
+
+# Install remaining extensions
+RUN docker-php-ext-install zip pdo_mysql pdo_pgsql bcmath intl mbstring
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
