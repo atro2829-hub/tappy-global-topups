@@ -14,9 +14,6 @@ if [ -z "$APP_URL" ]; then
     export APP_URL="https://tappynew.onrender.com"
 fi
 
-# Temporary debug - remove after fixing
-export APP_DEBUG=true
-
 # Fix APP_KEY format: Render generateValue creates base64 without prefix
 if [ -n "$APP_KEY" ] && [[ "$APP_KEY" != base64:* ]]; then
     # If key contains non-hex chars (=, /, +), it's base64 without prefix
