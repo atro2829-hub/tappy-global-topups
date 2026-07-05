@@ -7,5 +7,3 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*.php
 bootstrap/cache/*
-.env.example
-README.md

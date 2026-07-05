@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: tappynew
+    env: docker
+    plan: free
+    branch: main
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_URL
+        sync: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: tappy-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: tappy-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: tappy-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: tappy-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: tappy-db
+          property: password
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+
+databases:
+  - name: tappy-db
+    plan: free
+    region: virginia
