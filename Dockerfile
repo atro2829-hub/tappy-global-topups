@@ -1,19 +1,20 @@
 FROM php:8.3-apache
 
-# Install system dependencies
+# Enable Debian repo for PHP packages and install pre-built extensions
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
+    php8.3-gd \
+    php8.3-zip \
+    php8.3-mysql \
+    php8.3-pgsql \
+    php8.3-bcmath \
+    php8.3-intl \
+    php8.3-mbstring \
+    php8.3-curl \
+    php8.3-xml \
+    php8.3-readline \
     unzip \
     curl \
-    libpq-dev \
-    libicu-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Install PHP extensions (one group at a time for reliability)
-RUN docker-php-ext-install gd zip pdo_mysql pdo_pgsql bcmath intl mbstring
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
