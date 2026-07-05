@@ -9,10 +9,19 @@ if [ -n "$DB_HOST" ] && [[ "$DB_HOST" == dpg-* ]] && [[ "$DB_HOST" != *.* ]]; th
     echo "Switched DB_HOST to external: $DB_HOST"
 fi
 
+# Set APP_URL if not already set
+if [ -z "$APP_URL" ]; then
+    export APP_URL="https://tappynew.onrender.com"
+fi
+
+# Temporary debug - remove after fixing
+export APP_DEBUG=true
+
 if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force
 fi
 
+php artisan storage:link || true
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
