@@ -38,6 +38,8 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction
 
 # Install and build frontend
+ENV APP_URL=https://tappynew.onrender.com
+ENV ASSET_URL=
 RUN npm install && npm run build
 
 # Permissions
