@@ -4,6 +4,8 @@ FROM php:8.3-apache
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
+    libicu-dev \
+    libgmp-dev \
     unzip \
     curl \
     git \
@@ -12,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_pgsql zip
+RUN docker-php-ext-install pdo_pgsql zip intl gmp bcmath
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -28,7 +30,8 @@ COPY . /var/www/html
 WORKDIR /var/www/html
 
 # Install PHP dependencies (no dev)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction \
+    && composer dump-autoload
 
 # Install and build frontend
 RUN npm install && npm run build
