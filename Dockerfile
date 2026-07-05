@@ -1,7 +1,10 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
-# Install system packages + Node.js
+# Install system packages + Node.js 20
 RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libpq-dev \
     libzip-dev \
     libicu-dev \
@@ -14,7 +17,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_pgsql zip intl gmp bcmath
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd zip pdo_pgsql pdo_mysql intl gmp bcmath
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -31,7 +35,7 @@ WORKDIR /var/www/html
 
 # Install PHP dependencies
 ENV COMPOSER_MEMORY_LIMIT=-1
-RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction --ignore-platform-reqs
+RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction
 
 # Install and build frontend
 RUN npm install && npm run build
