@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpq-dev \
     libicu-dev \
+    default-mysql-dev \
     unzip \
     curl \
     && rm -rf /var/lib/apt/lists/*
